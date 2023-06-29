@@ -1,7 +1,7 @@
 package com.r3.developers.csdetemplate.digitalcurrency.workflows
 
 import com.r3.developers.csdetemplate.digitalcurrency.helpers.findInfo
-import com.r3.developers.csdetemplate.digitalcurrency.states.BundleOfBonds
+import com.r3.developers.csdetemplate.digitalcurrency.states.Bond
 import net.corda.v5.application.flows.ClientRequestBody
 import net.corda.v5.application.flows.ClientStartableFlow
 import net.corda.v5.application.flows.CordaInject
@@ -13,11 +13,15 @@ import net.corda.v5.ledger.utxo.UtxoLedgerService
 import org.slf4j.LoggerFactory
 import java.util.*
 
-data class BundleOfMortgagesStateResults(val bundleId: UUID,
-                                         val originator: MemberX500Name,
-                                         val mortgages: List<UUID>)
+data class BondsStateResults(val mortgageId: UUID,
+                             val owner: MemberX500Name,
+                             val interestRate: Double,
+                             val fixedInterestRate: Boolean,
+                             val loanToValue: Double,
+                             val creditQualityRating: String,
+                             val bundled: Boolean)
 
-class ListBundleOfMortgagesFlow : ClientStartableFlow {
+class ListBondsFlow : ClientStartableFlow {
     private companion object {
         val log = LoggerFactory.getLogger(this::class.java.enclosingClass)
     }
@@ -34,18 +38,22 @@ class ListBundleOfMortgagesFlow : ClientStartableFlow {
 
     @Suspendable
     override fun call(requestBody: ClientRequestBody): String {
-        log.info("ListBundleOfMortgagesFlow.call() called")
+        log.info("ListMortgagesFlow.call() called")
         val queryingMember = memberLookup.myInfo()
 
-        val states = ledgerService.findUnconsumedStatesByType(BundleOfBonds::class.java).filter { bundle ->
-            bundle.state.contractState.originator == queryingMember.ledgerKeys.first()
+        val states = ledgerService.findUnconsumedStatesByType(Bond::class.java).filter { mortgages ->
+            mortgages.state.contractState.creditor == queryingMember.ledgerKeys.first()
         }
 
         val results = states.map {
-            BundleOfMortgagesStateResults(
-                it.state.contractState.bundleId,
-                memberLookup.findInfo(it.state.contractState.originator).name,
-                it.state.contractState.bondIds) }
+            BondsStateResults(
+                it.state.contractState.bondId,
+                memberLookup.findInfo(it.state.contractState.creditor).name,
+                it.state.contractState.interestRate,
+                it.state.contractState.fixedInterestRate,
+                it.state.contractState.loanToValue,
+                it.state.contractState.creditQualityRating,
+                it.state.contractState.bundled) }
 
         return jsonMarshallingService.format(results)
     }
@@ -55,7 +63,7 @@ class ListBundleOfMortgagesFlow : ClientStartableFlow {
 RequestBody for triggering the flow via REST:
 {
     "clientRequestId": "list-mortgages-1",
-    "flowClassName": "com.r3.developers.csdetemplate.digitalcurrency.workflows.ListBundleOfMortgagesFlow",
+    "flowClassName": "com.r3.developers.csdetemplate.digitalcurrency.workflows.ListMortgagesFlow",
     "requestBody": {}
 }
 */

@@ -6,22 +6,17 @@ import net.corda.v5.ledger.utxo.BelongsToContract
 import net.corda.v5.ledger.utxo.ContractState
 import java.security.PublicKey
 
-@BelongsToContract(DigitalCurrencyContract::class)
+//annotate which contract governs the digital currency state
+//inherit state from ContractState class
 data class DigitalCurrency(
-    val quantity: Int,
-    val holder: PublicKey,
-    private val participants: List<PublicKey>) : ContractState {
-    override fun getParticipants(): List<PublicKey> {
-        return listOf(holder)
-    }
+    //add property to represent the quantity of currency
+    //add property to represent the owner of currency
+    private val participants: List<PublicKey>) {
+        //implement get participants as only the holder
 
-    fun sendAmount(send: Int) =
-        copy(quantity = send)
+        //sendAmount to get an updated count of the currency
 
-    fun sendTo(newHolder: PublicKey) =
-        copy(holder = newHolder)
+        //sendTo to change ownership of the currency
 
-    fun sendAmountTo(send: Int, newHolder: PublicKey) =
-        copy(quantity = send, holder = newHolder)
-
+        //sendAmountTo to change ownership and quantity of the currency
 }

@@ -32,35 +32,36 @@ class TransferDigitalCurrencyFlow: AbstractFlow(), ClientStartableFlow {
             val toHolder = memberLookup.lookup(MemberX500Name.parse(flowArgs.toHolder)) ?:
                 throw CordaRuntimeException("MemberLookup can't find toHolder specified in flow arguments.")
 
-            val availableTokens = ledgerService.findUnconsumedStatesByType(DigitalCurrency::class.java)
-
-            val coinSelection = CoinSelection()
-            val (currencyToSpend, spentCurrency) = coinSelection.selectTokensForTransfer(flowArgs.quantity,
-                                                            fromHolder.ledgerKeys.first(),
-                                                            toHolder.ledgerKeys.first(),
-                                                            availableTokens)
-
-            val notary = notaryLookup.notaryServices.single()
-
-            val txBuilder = ledgerService.createTransactionBuilder()
-                .setNotary(notary.name)
-                .setTimeWindowBetween(Instant.now(), Instant.now().plusMillis(Duration.ofDays(1).toMillis()))
-                .addInputStates(currencyToSpend.map { it.ref })
-                .addOutputStates(spentCurrency)
-                .addCommand(DigitalCurrencyContract.Transfer())
-                .addSignatories(fromHolder.ledgerKeys.first(), toHolder.ledgerKeys.first()) // issuer does not sign
-
-            val signedTransaction = txBuilder.toSignedTransaction()
-
-            val session = flowMessaging.initiateFlow(toHolder.name)
-
-            val finalizedSignedTransaction = ledgerService.finalize(
-                signedTransaction,
-                listOf(session)
-            )
-            return finalizedSignedTransaction.transaction.id.toString().also {
-                logger.info("Successful ${signedTransaction.commands.first()} with response: $it")
-            }
+//            val availableTokens = ledgerService.findUnconsumedStatesByType(DigitalCurrency::class.java)
+//
+//            val coinSelection = CoinSelection()
+//            val (currencyToSpend, spentCurrency) = coinSelection.selectTokensForTransfer(flowArgs.quantity,
+//                                                            fromHolder.ledgerKeys.first(),
+//                                                            toHolder.ledgerKeys.first(),
+//                                                            availableTokens)
+//
+//            val notary = notaryLookup.notaryServices.single()
+//
+//            val txBuilder = ledgerService.createTransactionBuilder()
+//                .setNotary(notary.name)
+//                .setTimeWindowBetween(Instant.now(), Instant.now().plusMillis(Duration.ofDays(1).toMillis()))
+//                .addInputStates(currencyToSpend.map { it.ref })
+//                .addOutputStates(spentCurrency)
+//                .addCommand(DigitalCurrencyContract.Transfer())
+//                .addSignatories(fromHolder.ledgerKeys.first(), toHolder.ledgerKeys.first()) // issuer does not sign
+//
+//            val signedTransaction = txBuilder.toSignedTransaction()
+//
+//            val session = flowMessaging.initiateFlow(toHolder.name)
+//
+//            val finalizedSignedTransaction = ledgerService.finalize(
+//                signedTransaction,
+//                listOf(session)
+//            )
+//            return finalizedSignedTransaction.transaction.id.toString().also {
+//                logger.info("Successful ${signedTransaction.commands.first()} with response: $it")
+//            }
+            return "implement me"
         }
         catch (e: Exception) {
             logger.warn("Failed to process transfer digital currency for request body '$requestBody' with exception: '${e.message}'")
@@ -78,8 +79,8 @@ class FinalizeTransferDigitalCurrencyResponderFlow: AbstractFlow(), ResponderFlo
 
         try {
             val finalizedSignedTransaction = ledgerService.receiveFinality(session) { ledgerTransaction ->
-                val state = ledgerTransaction.getOutputStates(DigitalCurrency::class.java).first() ?:
-                    throw CordaRuntimeException("Failed verification - transaction did not have at least one output DigitalCurrency.")
+//                val state = ledgerTransaction.getOutputStates(DigitalCurrency::class.java).first() ?:
+//                    throw CordaRuntimeException("Failed verification - transaction did not have at least one output DigitalCurrency.")
 
                 logger.info("Verified the transaction- ${ledgerTransaction.id}")
             }

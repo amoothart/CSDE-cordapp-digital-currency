@@ -34,16 +34,17 @@ class ListDigitalCurrencyFlow : ClientStartableFlow {
         log.info("ListDigitalCurrenciesFlow.call() called")
         val queryingMember = memberLookup.myInfo()
 
-        val states = ledgerService.findUnconsumedStatesByType(DigitalCurrency::class.java).filter { digitalCurrency ->
-            digitalCurrency.state.contractState.holder == queryingMember.ledgerKeys.first()
-        }
-
-        val results = states.map {
-            DigitalCurrencyStateResults(
-                it.state.contractState.quantity,
-                memberLookup.findInfo(it.state.contractState.holder).name) }
-
-        return jsonMarshallingService.format(results)
+//        val states = ledgerService.findUnconsumedStatesByType(DigitalCurrency::class.java).filter { digitalCurrency ->
+//            digitalCurrency.state.contractState.holder == queryingMember.ledgerKeys.first()
+//        }
+//
+//        val results = states.map {
+//            DigitalCurrencyStateResults(
+//                it.state.contractState.quantity,
+//                memberLookup.findInfo(it.state.contractState.holder).name) }
+//
+//        return jsonMarshallingService.format(results)
+        return "implement me"
     }
 }
 

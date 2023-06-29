@@ -18,12 +18,14 @@ class DigitalCurrencyContract: Contract {
 
         when(command) {
             is Issue -> {
-                "When command is Issue there should be no input states." using (transaction.inputContractStates.isEmpty())
-                "When command is Issue there should be one and only one output state." using (transaction.outputContractStates.size == 1)
+                //add contract logic
+                "When command is Issue there should be no input states." using (true)
+                "When command is Issue there should be one and only one output state." using (true)
 
                 "The output state should have only one participant." using {
                     val output = transaction.outputContractStates.first() as DigitalCurrency
-                    output.participants.size==1
+                    // exactly 1 participant
+                    true
                 }
             }
             is Transfer -> {
@@ -32,13 +34,13 @@ class DigitalCurrencyContract: Contract {
 
                 val sentDigitalCurrency = transaction.inputContractStates.filterIsInstance<DigitalCurrency>()
                 val receivedDigitalCurrency = transaction.outputContractStates.filterIsInstance<DigitalCurrency>()
-                val sentAmount = sentDigitalCurrency.sumOf { it.quantity }
-                val receivedAmount = receivedDigitalCurrency.sumOf { it.quantity }
-                "When command is Transfer the sent and received amount should be the same total amount." using (
-                    sentAmount == receivedAmount)
+//                val sentAmount = sentDigitalCurrency.sumOf { it.quantity }
+//                val receivedAmount = receivedDigitalCurrency.sumOf { it.quantity }
+//                "When command is Transfer the sent and received amount should be the same total amount." using (
+//                    sentAmount == receivedAmount)
 
-                "When command is Transfer there must be exactly one participant." using (
-                        receivedDigitalCurrency.all { it.participants.size == 1 })
+//                "When command is Transfer there must be exactly one participant." using (
+//                        receivedDigitalCurrency.all { it.participants.size == 1 })
                 // additional checks for sender/receiver being the specific participants
             }
             is Withdraw -> {
@@ -47,13 +49,13 @@ class DigitalCurrencyContract: Contract {
 
                 val sentDigitalCurrency = transaction.inputContractStates.filterIsInstance<DigitalCurrency>()
                 val remainingDigitalCurrency = transaction.outputContractStates.filterIsInstance<DigitalCurrency>()
-                val sentAmount = sentDigitalCurrency.sumOf { it.quantity }
-                val remainingAmount = remainingDigitalCurrency.sumOf { it.quantity }
-                "When command is Withdraw the sent amount should be greater than the remaining amount." using (
-                        sentAmount > remainingAmount)
+//                val sentAmount = sentDigitalCurrency.sumOf { it.quantity }
+//                val remainingAmount = remainingDigitalCurrency.sumOf { it.quantity }
+//                "When command is Withdraw the sent amount should be greater than the remaining amount." using (
+//                        sentAmount > remainingAmount)
 
-                "When command is Withdraw there must be exactly one participant." using (
-                        remainingDigitalCurrency.all { it.participants.size == 1 })
+//                "When command is Withdraw there must be exactly one participant." using (
+//                        remainingDigitalCurrency.all { it.participants.size == 1 })
             }
             else -> {
                 throw CordaRuntimeException("Command ${command} not allowed.")

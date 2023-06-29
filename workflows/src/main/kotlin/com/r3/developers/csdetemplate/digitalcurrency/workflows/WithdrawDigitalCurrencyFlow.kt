@@ -23,36 +23,37 @@ class WithdrawDigitalCurrencyFlow: AbstractFlow(), ClientStartableFlow {
             val flowArgs = requestBody.getRequestBodyAs(json, WithdrawDigitalCurrency::class.java)
 
             if(flowArgs.quantity <= 0) {
-                throw CordaRuntimeException("Must withdrawl a positive amount of currency.")
+                throw CordaRuntimeException("Must withdraw a positive amount of currency.")
             }
 
             val fromHolder = memberLookup.myInfo()
 
-            val availableTokens = ledgerService.findUnconsumedStatesByType(DigitalCurrency::class.java)
-
-            val coinSelection = CoinSelection()
-            val (currencyToWithdraw, remainingCurrency) = coinSelection.selectTokensForRedemption(flowArgs.quantity, availableTokens)
-
-            val notary = notaryLookup.notaryServices.single()
-
-            val txBuilder = ledgerService.createTransactionBuilder()
-                .setNotary(notary.name)
-                .setTimeWindowBetween(Instant.now(), Instant.now().plusMillis(Duration.ofDays(1).toMillis()))
-                .addInputStates(currencyToWithdraw.map { it.ref })
-                .addOutputStates(remainingCurrency)
-                .addCommand(DigitalCurrencyContract.Withdraw())
-                .addSignatories(fromHolder.ledgerKeys.first()) // issuer does not sign
-
-            val signedTransaction = txBuilder.toSignedTransaction()
-
-            val finalizedSignedTransaction = ledgerService.finalize(
-                signedTransaction,
-                listOf()
-            )
-
-            return finalizedSignedTransaction.transaction.id.toString().also {
-                logger.info("Successful ${signedTransaction.commands.first()} with response: $it")
-            }
+//            val availableTokens = ledgerService.findUnconsumedStatesByType(DigitalCurrency::class.java)
+//
+//            val coinSelection = CoinSelection()
+//            val (currencyToWithdraw, remainingCurrency) = coinSelection.selectTokensForRedemption(flowArgs.quantity, availableTokens)
+//
+//            val notary = notaryLookup.notaryServices.single()
+//
+//            val txBuilder = ledgerService.createTransactionBuilder()
+//                .setNotary(notary.name)
+//                .setTimeWindowBetween(Instant.now(), Instant.now().plusMillis(Duration.ofDays(1).toMillis()))
+//                .addInputStates(currencyToWithdraw.map { it.ref })
+//                .addOutputStates(remainingCurrency)
+//                .addCommand(DigitalCurrencyContract.Withdraw())
+//                .addSignatories(fromHolder.ledgerKeys.first()) // issuer does not sign
+//
+//            val signedTransaction = txBuilder.toSignedTransaction()
+//
+//            val finalizedSignedTransaction = ledgerService.finalize(
+//                signedTransaction,
+//                listOf()
+//            )
+//
+//            return finalizedSignedTransaction.transaction.id.toString().also {
+//                logger.info("Successful ${signedTransaction.commands.first()} with response: $it")
+//            }
+            return "implement me"
         } catch (e: Exception) {
             logger.warn("Failed to process transfer digital currency for request body '$requestBody' with exception: '${e.message}'")
             throw e
