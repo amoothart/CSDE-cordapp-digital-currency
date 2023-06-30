@@ -27,9 +27,9 @@ class SellBondFlow: AbstractFlow(), ClientStartableFlow {
         try {
             val flowArgs = requestBody.getRequestBodyAs(json, SellBond::class.java)
 
-            val fromOwner = memberLookup.myInfo()
+            val fromCreditor = memberLookup.myInfo()
 
-            if (flowArgs.buyer == fromOwner.name.toString()) {
+            if (flowArgs.buyer == fromCreditor.name.toString()) {
                 throw CordaRuntimeException("Cannot sell bond to self.")
             }
 
@@ -39,7 +39,7 @@ class SellBondFlow: AbstractFlow(), ClientStartableFlow {
             // Queries the VNode's vault for unconsumed states to be sold
             // Filter query results to the bond id which was provided in the API request
 
-            // Map existing bond to a proposed new state with a new owner "buyer"
+            // Map existing bond to a proposed new state with a new creditor "buyer"
 
             val notary = notaryLookup.notaryServices.single()
 

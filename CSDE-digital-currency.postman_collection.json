@@ -798,6 +798,51 @@
 			"response": []
 		},
 		{
+			"name": "Start Issue Bond Flow",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"requestId = pm.environment.get(\"clientRequestIdNext-issueMortgage\")",
+							"pm.environment.set(\"clientRequestIdPrevious-issueMortgage\", requestId);",
+							"",
+							"let regex = /\\d+/g; // matches all digits in the string",
+							"requestId = requestId.replace(regex, function(match) {",
+							"  return Number(match) + 1; // increment the matched number by 1",
+							"});",
+							"",
+							"pm.environment.set(\"clientRequestIdNext-issueMortgage\", requestId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"clientRequestId\": \"{{clientRequestIdNext-issueMortgage}}\",\n    \"flowClassName\": \"com.r3.developers.csdetemplate.digitalcurrency.workflows.IssueBondFlow\",\n    \"requestBody\": {\n        \"creditor\":\"O=Bank of Alice, L=NYC, C=US\",\n        \"interestRate\":5.75,\n        \"fixedInterestRate\":true,\n        \"loanToValue\":0.5,\n        \"creditQualityRating\":\"AAA\"\n    }\n}"
+				},
+				"url": {
+					"raw": "https://localhost:8888/api/v1/flow/{{holdingIdentityShortHash-Issuer}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"api",
+						"v1",
+						"flow",
+						"{{holdingIdentityShortHash-Issuer}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get Issue Mortgage Flow Status",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
@@ -873,6 +918,51 @@
 			"response": []
 		},
 		{
+			"name": "List Bonds Flow",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"requestId = pm.environment.get(\"clientRequestIdNext-listMortgages\")",
+							"pm.environment.set(\"clientRequestIdPrevious-listMortgages\", requestId);",
+							"",
+							"let regex = /\\d+/g; // matches all digits in the string",
+							"requestId = requestId.replace(regex, function(match) {",
+							"  return Number(match) + 1; // increment the matched number by 1",
+							"});",
+							"",
+							"pm.environment.set(\"clientRequestIdNext-listMortgages\", requestId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"clientRequestId\": \"{{clientRequestIdNext-listMortgages}}\",\n    \"flowClassName\": \"com.r3.developers.csdetemplate.digitalcurrency.workflows.ListBondsFlow\",\n    \"requestBody\": {}\n}"
+				},
+				"url": {
+					"raw": "https://localhost:8888/api/v1/flow/{{holdingIdentityShortHash-Alice}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"api",
+						"v1",
+						"flow",
+						"{{holdingIdentityShortHash-Alice}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "List Mortgage Flow Status",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
@@ -897,6 +987,126 @@
 						"flow",
 						"{{holdingIdentityShortHash-Alice}}",
 						"{{clientRequestIdPrevious-listMortgages}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Mortgages By Bundle Id Flow",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"requestId = pm.environment.get(\"clientRequestIdNext-listMortgagesByBundleId\")",
+							"pm.environment.set(\"clientRequestIdPrevious-listMortgagesByBundleId\", requestId);",
+							"",
+							"let regex = /\\d+/g; // matches all digits in the string",
+							"requestId = requestId.replace(regex, function(match) {",
+							"  return Number(match) + 1; // increment the matched number by 1",
+							"});",
+							"",
+							"pm.environment.set(\"clientRequestIdNext-listMortgagesByBundleId\", requestId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"clientRequestId\": \"{{clientRequestIdNext-listMortgagesByBundleId}}\",\n    \"flowClassName\": \"com.r3.developers.csdetemplate.digitalcurrency.workflows.ListMortgagesByBundleIdFlow\",\n    \"requestBody\": {\n        \"bundleId\": \"59f10269-5002-47b4-b8c8-c02ea2b96a19\"\n    }\n}"
+				},
+				"url": {
+					"raw": "https://localhost:8888/api/v1/flow/{{holdingIdentityShortHash-Alice}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"api",
+						"v1",
+						"flow",
+						"{{holdingIdentityShortHash-Alice}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Bonds By Bundle Id Flow",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"requestId = pm.environment.get(\"clientRequestIdNext-listMortgagesByBundleId\")",
+							"pm.environment.set(\"clientRequestIdPrevious-listMortgagesByBundleId\", requestId);",
+							"",
+							"let regex = /\\d+/g; // matches all digits in the string",
+							"requestId = requestId.replace(regex, function(match) {",
+							"  return Number(match) + 1; // increment the matched number by 1",
+							"});",
+							"",
+							"pm.environment.set(\"clientRequestIdNext-listMortgagesByBundleId\", requestId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"clientRequestId\": \"{{clientRequestIdNext-listMortgagesByBundleId}}\",\n    \"flowClassName\": \"com.r3.developers.csdetemplate.digitalcurrency.workflows.ListBondsByBundleIdFlow\",\n    \"requestBody\": {\n        \"bundleId\": \"59f10269-5002-47b4-b8c8-c02ea2b96a19\"\n    }\n}"
+				},
+				"url": {
+					"raw": "https://localhost:8888/api/v1/flow/{{holdingIdentityShortHash-Alice}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"api",
+						"v1",
+						"flow",
+						"{{holdingIdentityShortHash-Alice}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Mortgages By Bundle Id Flow Status",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:8888/api/v1/flow/{{holdingIdentityShortHash-Alice}}/{{clientRequestIdPrevious-listMortgagesByBundleId}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"api",
+						"v1",
+						"flow",
+						"{{holdingIdentityShortHash-Alice}}",
+						"{{clientRequestIdPrevious-listMortgagesByBundleId}}"
 					]
 				}
 			},
@@ -929,6 +1139,51 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\n    \"clientRequestId\": \"{{clientRequestIdNext-sellMortgage}}\",\n    \"flowClassName\": \"com.r3.developers.csdetemplate.digitalcurrency.workflows.SellMortgageFlow\",\n    \"requestBody\": {\n        \"mortgageIds\":[\"1\"],\n        \"price\":100,\n        \"buyers\":\"O=Bank of Bob, L=NYC, C=US\"\n    }\n}"
+				},
+				"url": {
+					"raw": "https://localhost:8888/api/v1/flow/{{holdingIdentityShortHash-Alice}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"api",
+						"v1",
+						"flow",
+						"{{holdingIdentityShortHash-Alice}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Start Sell Bond Flow",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"requestId = pm.environment.get(\"clientRequestIdNext-sellMortgage\")",
+							"pm.environment.set(\"clientRequestIdPrevious-sellMortgage\", requestId);",
+							"",
+							"let regex = /\\d+/g; // matches all digits in the string",
+							"requestId = requestId.replace(regex, function(match) {",
+							"  return Number(match) + 1; // increment the matched number by 1",
+							"});",
+							"",
+							"pm.environment.set(\"clientRequestIdNext-sellMortgage\", requestId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"clientRequestId\": \"{{clientRequestIdNext-sellMortgage}}\",\n    \"flowClassName\": \"com.r3.developers.csdetemplate.digitalcurrency.workflows.SellBondFlow\",\n    \"requestBody\": {\n        \"bondIds\":[\"1\"],\n        \"price\":100,\n        \"buyers\":\"O=Bank of Bob, L=NYC, C=US\"\n    }\n}"
 				},
 				"url": {
 					"raw": "https://localhost:8888/api/v1/flow/{{holdingIdentityShortHash-Alice}}",
@@ -1003,7 +1258,52 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"clientRequestId\": \"{{clientRequestIdNext-bundleMortgage}}\",\n    \"flowClassName\": \"com.r3.developers.csdetemplate.digitalcurrency.workflows.CreateBundleOfMortgagesFlow\",\n    \"requestBody\": {\n        \"mortgageIds\":[\"f4f6878d-fdd1-4a7b-bc68-d32d050b9f8f\"]\n    }\n}"
+					"raw": "{\n    \"clientRequestId\": \"{{clientRequestIdNext-bundleMortgage}}\",\n    \"flowClassName\": \"com.r3.developers.csdetemplate.digitalcurrency.workflows.CreateBundleOfMortgagesFlow\",\n    \"requestBody\": {\n        \"mortgageIds\":[\"bcfc41a6-b964-4c67-bb94-7f4107f3099e\"]\n    }\n}"
+				},
+				"url": {
+					"raw": "https://localhost:8888/api/v1/flow/{{holdingIdentityShortHash-Alice}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"api",
+						"v1",
+						"flow",
+						"{{holdingIdentityShortHash-Alice}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Start Bundle Bonds Flow",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"requestId = pm.environment.get(\"clientRequestIdNext-bundleMortgage\")",
+							"pm.environment.set(\"clientRequestIdPrevious-bundleMortgage\", requestId);",
+							"",
+							"let regex = /\\d+/g; // matches all digits in the string",
+							"requestId = requestId.replace(regex, function(match) {",
+							"  return Number(match) + 1; // increment the matched number by 1",
+							"});",
+							"",
+							"pm.environment.set(\"clientRequestIdNext-bundleMortgage\", requestId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"clientRequestId\": \"{{clientRequestIdNext-bundleMortgage}}\",\n    \"flowClassName\": \"com.r3.developers.csdetemplate.digitalcurrency.workflows.CreateBundleOfBondsFlow\",\n    \"requestBody\": {\n        \"bondIds\":[\"bcfc41a6-b964-4c67-bb94-7f4107f3099e\"]\n    }\n}"
 				},
 				"url": {
 					"raw": "https://localhost:8888/api/v1/flow/{{holdingIdentityShortHash-Alice}}",
@@ -1053,7 +1353,7 @@
 			"response": []
 		},
 		{
-			"name": "List Bundles Flow",
+			"name": "List Bundle of Mortgages Flow",
 			"event": [
 				{
 					"listen": "test",
@@ -1079,6 +1379,51 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\n    \"clientRequestId\": \"{{clientRequestIdNext-listBundles}}\",\n    \"flowClassName\": \"com.r3.developers.csdetemplate.digitalcurrency.workflows.ListBundleOfMortgagesFlow\",\n    \"requestBody\": {}\n}"
+				},
+				"url": {
+					"raw": "https://localhost:8888/api/v1/flow/{{holdingIdentityShortHash-Alice}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"api",
+						"v1",
+						"flow",
+						"{{holdingIdentityShortHash-Alice}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Bundle of Bonds Flow",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"requestId = pm.environment.get(\"clientRequestIdNext-listBundles\")",
+							"pm.environment.set(\"clientRequestIdPrevious-listBundles\", requestId);",
+							"",
+							"let regex = /\\d+/g; // matches all digits in the string",
+							"requestId = requestId.replace(regex, function(match) {",
+							"  return Number(match) + 1; // increment the matched number by 1",
+							"});",
+							"",
+							"pm.environment.set(\"clientRequestIdNext-listBundles\", requestId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"clientRequestId\": \"{{clientRequestIdNext-listBundles}}\",\n    \"flowClassName\": \"com.r3.developers.csdetemplate.digitalcurrency.workflows.ListBundleOfBondsFlow\",\n    \"requestBody\": {}\n}"
 				},
 				"url": {
 					"raw": "https://localhost:8888/api/v1/flow/{{holdingIdentityShortHash-Alice}}",

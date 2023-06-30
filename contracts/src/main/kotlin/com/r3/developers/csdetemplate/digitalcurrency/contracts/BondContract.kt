@@ -32,7 +32,7 @@ class BondContract: Contract {
 
                 val sentBond = transaction.inputContractStates.filterIsInstance<Bond>().first()
                 val receivedBond = transaction.outputContractStates.filterIsInstance<Bond>().first()
-                "When command is Sell the new owner should be different than the current owner." using (
+                "When command is Sell the new creditor should be different than the current creditor." using (
                         sentBond.creditor != receivedBond.creditor)
 
                 "When command is Sell there must be exactly one participants." using (

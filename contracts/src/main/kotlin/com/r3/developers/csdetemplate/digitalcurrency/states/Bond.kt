@@ -20,7 +20,7 @@ data class Bond(
         return listOf(creditor)
     }
 
-    fun newOwner(newCreditor: PublicKey) =
+    fun newCreditor(newCreditor: PublicKey) =
         copy(creditor = newCreditor)
 
     fun bundled() =

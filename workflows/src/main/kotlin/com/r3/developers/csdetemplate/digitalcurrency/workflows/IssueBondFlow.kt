@@ -28,16 +28,16 @@ class IssueBondFlow: AbstractFlow(), ClientStartableFlow {
             val flowArgs = requestBody.getRequestBodyAs(json, IssueBond::class.java)
 
             val myInfo = memberLookup.myInfo()
-            val owner = memberLookup.lookup(MemberX500Name.parse(flowArgs.creditor)) ?:
+            val creditor = memberLookup.lookup(MemberX500Name.parse(flowArgs.creditor)) ?:
                 throw CordaRuntimeException("MemberLookup can't find owner specified in flow arguments.")
 
             val bond = Bond(bondId = UUID.randomUUID(),
-                owner.ledgerKeys.first(),
+                creditor.ledgerKeys.first(),
                 flowArgs.interestRate,
                 flowArgs.fixedInterestRate,
                 flowArgs.loanToValue,
                 flowArgs.creditQualityRating,
-                participants = listOf(myInfo.ledgerKeys.first(), owner.ledgerKeys.first()))
+                participants = listOf(myInfo.ledgerKeys.first(), creditor.ledgerKeys.first()))
 
             val notary = notaryLookup.notaryServices.single()
 
@@ -53,7 +53,7 @@ class IssueBondFlow: AbstractFlow(), ClientStartableFlow {
 
             val signedTransaction = txBuilder.toSignedTransaction()
 
-            val session = flowMessaging.initiateFlow(owner.name)
+            val session = flowMessaging.initiateFlow(creditor.name)
 
             val finalizedSignedTransaction = ledgerService.finalize(
                 signedTransaction,
