@@ -42,7 +42,6 @@ class IssueDigitalCurrencyFlow: AbstractFlow(), ClientStartableFlow {
                 .setTimeWindowBetween(Instant.now(), Instant.now().plusMillis(Duration.ofDays(1).toMillis()))
                 .addOutputState(digitalCurrency)
                 .addCommand(DigitalCurrencyContract.Issue())
-                .addSignatories(digitalCurrency.participants)
                 .addSignatories(signatories)
 
             val signedTransaction = txBuilder.toSignedTransaction()

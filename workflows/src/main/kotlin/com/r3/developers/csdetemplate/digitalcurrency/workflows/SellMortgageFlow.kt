@@ -66,7 +66,6 @@ class SellMortgageFlow: AbstractFlow(), ClientStartableFlow {
             val session = flowMessaging.initiateFlow(toHolder.name
             ) { flowContextProperties: FlowContextProperties ->
                 flowContextProperties.put("price", flowArgs.price.toString())
-                flowContextProperties.put("buyer", flowArgs.buyer)
             }
 
             logger.info("Seller sending TxBuilder to ${session.counterparty}")
